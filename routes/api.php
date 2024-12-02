@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -10,8 +11,8 @@ Route::post('login', [AuthController::class, 'login']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('user', [AuthController::class, 'user']);
-
+    Route::get('users', [AuthController::class, 'user']);
+    Route::middleware('auth:sanctum')->get('users', [UserController::class, 'index']);
 
     Route::get('attendances', [AttendanceController::class, 'index']);
     Route::post('attendances', [AttendanceController::class, 'store']);

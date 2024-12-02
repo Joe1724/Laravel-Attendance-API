@@ -22,9 +22,9 @@ class Attendance extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',         // Reference to the user (employee)
-        'attendance_date', // The attendance date
-        'status',          // The attendance status
+        'user_id',
+        'attendance_date',
+        'status',
     ];
 
     /**
