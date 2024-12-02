@@ -83,27 +83,7 @@ php artisan db:seed
 
 This will create users and attendance records using the factory and Faker.
 
-### 8. Set Up Sanctum Authentication
-
-Publish Sanctum's configuration file and migration:
-
-```bash
-php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
-php artisan migrate
-```
-
-### 9. Protect Routes with Sanctum Middleware
-
-Ensure that your `api.php` routes are set up to use Sanctum authentication:
-
-```php
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('user', [AuthController::class, 'user']);
-    Route::resource('attendances', AttendanceController::class); // CRUD for Attendance
-});
-```
-
-### 10. Serve the Application
+Serve the Application
 
 Now, you can serve the application using the built-in Laravel development server:
 
