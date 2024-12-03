@@ -1,7 +1,3 @@
-Here's a sample README for your project that you can use to post on GitHub:
-
----
-
 # Attendance API - Laravel RESTful API
 
 This is a simple Laravel-based RESTful API for managing employee attendance. The API provides functionality for user registration, login, and CRUD operations on attendance records. The API also supports authentication using Laravel Sanctum and includes the ability to generate dummy data using Laravel's Faker library.
