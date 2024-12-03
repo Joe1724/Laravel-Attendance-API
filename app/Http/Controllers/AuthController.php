@@ -10,7 +10,6 @@ use Validator;
 
 class AuthController extends Controller
 {
-
     public function register(Request $request)
     {
         // Validate input
@@ -20,7 +19,6 @@ class AuthController extends Controller
             'password' => 'required|string|min:6|confirmed',
         ]);
 
-        // Check if validation fails
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
@@ -32,52 +30,51 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // Return response
         return response()->json([
             'message' => 'User registered successfully.',
             'user' => $user,
         ], 201);
     }
 
-    /**
-     * Login and return access token.
-     */
     public function login(Request $request)
     {
-        // Validate input
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
-        // Check if validation fails
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
 
-        // Check if credentials are correct
         if (Auth::attempt($request->only('email', 'password'))) {
-            // Generate token for the user
             $user = Auth::user();
             $token = $user->createToken('LaravelSanctum')->plainTextToken;
 
-            // Return response with token
             return response()->json([
                 'message' => 'Login successful.',
                 'access_token' => $token,
             ], 200);
         }
 
-        // Invalid credentials response
         return response()->json(['message' => 'Invalid credentials'], 401);
     }
 
-    /**
-     * Get the authenticated user's details.
-     */
     public function user(Request $request)
     {
-        // Return authenticated user's details
         return response()->json($request->user());
+    }
+
+    /**
+     * Logout the authenticated user.
+     */
+    public function logout(Request $request)
+    {
+        // Revoke the current user's token
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'message' => 'Logout successful.',
+        ], 200);
     }
 }

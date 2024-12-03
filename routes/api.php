@@ -11,12 +11,25 @@ Route::post('login', [AuthController::class, 'login']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('users', [AuthController::class, 'user']);
-    Route::middleware('auth:sanctum')->get('users', [UserController::class, 'index']);
 
-    Route::get('attendances', [AttendanceController::class, 'index']);
-    Route::post('attendances', [AttendanceController::class, 'store']);
-    Route::get('attendances/{attendance}', [AttendanceController::class, 'show']);
-    Route::put('attendances/{attendance}', [AttendanceController::class, 'update']);
-    Route::delete('attendances/{attendance}', [AttendanceController::class, 'destroy']);
+    Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+
+
+    Route::prefix('users')->group(function () {
+        Route::get('/', [UserController::class, 'index']);
+        Route::get('{id}', [UserController::class, 'show']);
+        Route::post('/', [UserController::class, 'store']);
+        Route::put('{id}', [UserController::class, 'update']);
+        Route::delete('{id}', [UserController::class, 'destroy']);
+    });
+
+
+    Route::prefix('attendances')->group(function () {
+        Route::get('/', [AttendanceController::class, 'index']);
+        Route::post('/', [AttendanceController::class, 'store']);
+        Route::get('{id}', [AttendanceController::class, 'show']);
+        Route::put('{id}', [AttendanceController::class, 'update']);
+        Route::delete('{id}', [AttendanceController::class, 'destroy']);
+    });
 });

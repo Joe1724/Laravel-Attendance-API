@@ -45,6 +45,7 @@ class AttendanceController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'status' => 'required|in:present,absent,late,on_leave',
+            'attendance_date' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -53,6 +54,7 @@ class AttendanceController extends Controller
 
         $attendance = Attendance::findOrFail($id);
         $attendance->update($request->only('status'));
+        $attendance->update($request->only('attendance_date'));
 
         return response()->json($attendance);
     }
