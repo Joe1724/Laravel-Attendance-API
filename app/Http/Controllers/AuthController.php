@@ -37,28 +37,38 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email',
+        'password' => 'required|string',
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
-
-        if (Auth::attempt($request->only('email', 'password'))) {
-            $user = Auth::user();
-            $token = $user->createToken('LaravelSanctum')->plainTextToken;
-
-            return response()->json([
-                'message' => 'Login successful.',
-                'access_token' => $token,
-            ], 200);
-        }
-
-        return response()->json(['message' => 'Invalid credentials'], 401);
+    if ($validator->fails()) {
+        return response()->json($validator->errors(), 400);
     }
+
+    // Check credentials
+    if (Auth::attempt($request->only('email', 'password'))) {
+        $user = Auth::user();
+
+        // Check if the user already has an active token
+        if ($user->tokens()->count() > 0) {
+            return response()->json([
+                'message' => 'User is already logged in.',
+            ], 403);
+        }
+
+        // Create a new token if no active tokens
+        $token = $user->createToken('LaravelSanctum')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login successful.',
+            'access_token' => $token,
+        ], 200);
+    }
+
+    return response()->json(['message' => 'Invalid credentials'], 401);
+}
 
     public function user(Request $request)
     {
