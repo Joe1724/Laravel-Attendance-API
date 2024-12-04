@@ -42,32 +42,42 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
 {
-    // Validate the request
+    // Validate the request data
     $validator = Validator::make($request->all(), [
-        'name' => 'sometimes|string|max:255',
-        'email' => 'sometimes|email|unique:users,email,' . $id,
-        'password' => 'sometimes|string|min:6',
+        'name' => 'sometimes|required|string|max:255',
+        'email' => 'sometimes|required|email|unique:users,email,' . $id,
+        'password' => 'sometimes|required|string|min:6',
     ]);
 
     if ($validator->fails()) {
-        return response()->json($validator->errors(), 400);
+        return response()->json(['errors' => $validator->errors()], 422);
     }
 
-    // Find the user
+    // Find the user by ID
     $user = User::findOrFail($id);
 
-    // Update user attributes
+    // Extract only the fields provided in the request
     $data = $request->only(['name', 'email', 'password']);
 
-    // If password is provided, hash it before saving
-    if (isset($data['password'])) {
+    // Check if password is provided, and hash it
+    if (array_key_exists('password', $data)) {
         $data['password'] = bcrypt($data['password']);
     }
 
-    $user->update($data);
+    // Update the user attributes
+    $user->fill($data); // Fills the model with data
+    if ($user->isDirty()) { // Check if there are changes
+        $user->save(); // Save only if there are changes
+    } else {
+        return response()->json(['message' => 'No changes detected'], 200);
+    }
 
-    return response()->json($user);
+    return response()->json(['message' => 'User updated successfully', 'user' => $user]);
 }
+
+
+
+
 
 
     public function destroy($id)
