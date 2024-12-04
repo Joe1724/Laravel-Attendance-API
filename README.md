@@ -18,7 +18,7 @@ Follow these steps to set up the project locally:
 First, clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/your-username/attendance-api.git
+git clone https://github.com/Joe1724/Laravel-Attendance-API
 cd attendance-api
 ```
 
