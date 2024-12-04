@@ -19,7 +19,7 @@ First, clone the repository to your local machine:
 
 ```bash
 git clone https://github.com/Joe1724/Laravel-Attendance-API
-cd attendance-api
+cd Laravel-Attendance-API'
 ```
 
 ### 2. Install Dependencies
